@@ -54,15 +54,17 @@ def main(mode, file_path, model_type):
     
     encoder = Encoder()
 
+    encoded_string = []
+
+
     if mode == 0:
         input_str = input()
         
-        encoded_string = []
 
         for symbol in input_str:
             encoded_string.extend(
                 encoder.encode_symbol(ord(symbol ) + 1 , model.cum_freq))
-            model.update_model(ord(symbol))
+            model.update_model(ord(symbol) + 1)
 
 
 
@@ -77,8 +79,27 @@ def main(mode, file_path, model_type):
 
         
     elif mode == 1:
-        with open(file_path) as file :  
-            print('opening file')
+        with open(file_path, "r") as file :  
+            while True:
+                symbol = file.read(1)
+
+                if not symbol: # end of file
+                    break 
+
+                if (ord(symbol[0]) + 1) > 256:
+                    continue
+
+                
+
+                encoded_string.extend(
+                                encoder.encode_symbol(ord(symbol ) + 1 , model.cum_freq))
+                model.update_model(ord(symbol) + 1)
+
+            encoded_string.extend(
+                        encoder.encode_symbol(constants.EOF_SYMBOL, model.cum_freq))
+
+            encoder.done_encoding(encoded_string)
+
 
 
 
@@ -93,8 +114,11 @@ def main(mode, file_path, model_type):
 
     output_characters = []
 
+    count = 0
+
     while(True):
         symbol = decoder.decode_symbol(model.cum_freq,encoded_string)
+
         if (symbol == constants.EOF_SYMBOL): 
             break
 

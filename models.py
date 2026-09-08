@@ -56,10 +56,10 @@ class AdaptiveSource(Model):
         
         if (self.cum_freq[0] == constants.MAX_FREQUENCY):
             cumulative_calc = 0
-            for i in reversed(range (1, constants.TOTAL_SYMBOLS + 1)):
+            for i in reversed(range (0, constants.TOTAL_SYMBOLS + 1)):
                 self.freq[i] = (self.freq[i ] + 1) // 2
                 self.cum_freq[i] = cumulative_calc
-                cumulative_calc += self.cum_freq[i]
+                cumulative_calc += self.freq[i]
 
         i = symbol
         while(self.freq[i] == self.freq[i-1]):
