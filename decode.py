@@ -56,8 +56,6 @@ class Decoder :
 
             input = self.input.get_input(bits)
             
-            if input == -1:
-                return -1
 
             self.value = 2*self.value+input
 

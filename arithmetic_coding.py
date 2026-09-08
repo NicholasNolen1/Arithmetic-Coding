@@ -61,7 +61,7 @@ def main(mode, file_path, model_type):
 
         for symbol in input_str:
             encoded_string.extend(
-                encoder.encode_symbol(ord(symbol) , model.cum_freq))
+                encoder.encode_symbol(ord(symbol ) + 1 , model.cum_freq))
             model.update_model(ord(symbol))
 
 
@@ -95,10 +95,10 @@ def main(mode, file_path, model_type):
 
     while(True):
         symbol = decoder.decode_symbol(model.cum_freq,encoded_string)
-        if (symbol == -1): # using -1 as an EOF symbol 
+        if (symbol == constants.EOF_SYMBOL): 
             break
 
-        output_characters.append(chr(symbol))
+        output_characters.append(chr(symbol - 1))
         model.update_model(symbol)
 
         
@@ -118,7 +118,6 @@ if __name__ == '__main__':
     parser.add_argument('--input_file', '-i',type=pathlib.Path)
     parser.add_argument('--mode', '-m',type=int,choices=[0,1], help='0 for text mode, 1 for file mode')
     parser.add_argument('--model_type', '-t',type=int,choices=[0,1], help='0 for fixed, 1 for adaptive mode')
-
 
     args = parser.parse_args()
 
